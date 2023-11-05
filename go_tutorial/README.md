@@ -28,6 +28,18 @@ go run <file name>
 - The `func main()` is the typical entrypoint of a Go Program
 - A program can only have one `main function`, because you can only have one entrypoint
 
+### Go Packages
+- Modularize your application
+- Go programs are organized into packages, a package is a collection of Go files
+- Variables and fucntions defined outside any function, can be accessed in all other files within the same package
+- Execute all files in a package
+```
+go run .
+```
+- When working with multiple packages, create a directory/file as regards each package, you can also import packages between each other eg. `import <module_path>/package` then `package.(any function in the helper package)`
+- For importing functions between packages, make sure to capitalize the first letter of the function, this action exports the function and makes it importable in another package
+- You can also export variables, functions, constants, types; makes sure to capitalize the first letter of the data type to make it importable
+
 ### Variables and Constants
 - `isValidEmail := tomiwaaribisala@gmail.com`
 - `isValidName := len(firstName) >= 2 || len(surName) >= 10`
@@ -37,9 +49,18 @@ go run <file name>
 - Printing formatted data in Go using `Println`; `fmt.Println("My name is", name, "my ticket price is", ticketPrice)`
 - Printing formatted data in Go using `printf`; `fmt.printf("The ticket price is %v.\n, ticketPrice")`
 
+### Local Variables
+- Defined inside a function or block
+- Local variables can be accessed only inside that function or block of code
+- Best practice is to define variable as local as possible, create the variable where you need it 
+
 ### Package Level Variables
 - Defined at the top outside all functions
 - They can be accessed inside any of the functions, and in all files/functions which are in the same `package`
+
+### Global Variables
+- Declaration outside all functions and uppercase first letter
+- Global variables can be used everywhere across all packages 
 
 ### Data Types
 Go is a statically typed language, you need to tell the Go compiler the data type when declaring a variable; however, in most cases, Go can infer the data type of a variable when you assign a value.
@@ -130,7 +151,16 @@ if condition {
 
 }
 ```
-- If/Else statements for User Input Validation: ==, !=, >=, <=, AND, OR, a := b && c, a := b || c
+```go
+if condition {
+
+} else if !condition {
+
+} else {
+
+}
+```
+- If/Else statements for User Input Validation: ==, !=, >=, <=, AND, OR, a := b && c, a := b || c, a := b == c, a := b != c
 ```go
 if condition && condition {
 
@@ -165,7 +195,7 @@ if !condition || !condition {
 - An example using `switch statement`, given a user selects a specific city, a certain code is executed for that city.
 ```go
 switch city {
-    case "New York":
+   case "New York":
     // execute code for New York
     case "Singapore":
     // execute code for Singapore
@@ -204,10 +234,53 @@ greetUsers(confName)
 
 ### Return Values
 - A `function` can `return` data as a result, a function can take an input and return an output
-- In Go you have to define the input and output parameters including its type explicitly
+- Function is only executed, when "called"
+- Fuction is also used to reduce code duplication
+- In Go, you have to define the input and output parameters including its type explicitly
 - Go also allows return multiple values
 ```go
 func greetUsers(confName string, firstName string, surName string) (bool, bool, bool) {
     return confName, firstName, surName
 }
+```
+
+### Maps
+- Maps maps unique keys to values, you can retrieve the value by using its key later
+- All keys and values have the same data type, map supports only one data type at once
+```go
+var userData = []map[string]string
+userData["firstname"] = firstname
+userData["lastname"] = lastname
+userData["email"] = email
+```
+
+### Struct
+- Struct is a data structure that allows us to mix different data types, defines a structure(which fields) of the User Type
+```go
+type UserData struct {
+    firstName string
+    lastName string
+    email string
+    numberofTickets uint
+}
+```
+```go
+var userData = UserData {
+    firstName: firstName,
+    lastName: lastName, 
+    email: email,
+    numberofTickets: userTickets,
+}
+```
+
+### Goroutines(Concurrency)
+- Sequential code execution, make our program more efficient
+- Executing different parts of code in each separate thread(goroutine)
+```go
+func main() {
+
+}
+```
+```go
+go main()   // Go starts a new goroutine
 ```
