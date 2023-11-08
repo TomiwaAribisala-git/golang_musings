@@ -51,6 +51,7 @@ gofmt
 - The `import` declaration must follow the `package` declaration
 - The `func main()` is the typical entrypoint of a Go Program
 - A program can only have one `main function`, because you can only have one entrypoint
+- Declarations: `var`, `const`, `type`, `func` 
 
 ### Go Packages
 - Modularize your application
@@ -64,14 +65,50 @@ go run .
 - For importing functions between packages, make sure to capitalize the first letter of the function, this action exports the function and makes it importable in another package
 - You can also export variables, functions, constants, types; makes sure to capitalize the first letter of the data type to make it importable
 
+### Data Types
+- Go binary operators
+```go
+* / % << >> & &^
++ - | ^
+== != < <= > >= +=
+&&
+||
+
+```
+- Types
+- Integers: `int`, `unit`
+- Floating point numbers
+- Complex Numbers 
+- Booleans: `bool`---`true`, `false`
+- Strings: Packages for manipulating strings--`strings`, `strconv`, `bytes`, `unicode`
+
+
 ### Variables and Constants
-- `isValidEmail := tomiwaaribisala@gmail.com`
-- `isValidName := len(firstName) >= 2 || len(surName) >= 10`
-- `isValidTC := boughtTickets > 0 && leftTickets <= 50`
-- `var name string = "tomiwa"`
+- `isValidEmail := tomiwaaribisala@gmail.com`   ## short variable declarations for initializing local variables
+- `isValidName := len(firstName) >= 2 || len(surName) >= 10` ## short variable declarations for initializing local variables
+- `isValidTC := boughtTickets > 0 && leftTickets <= 50` ## short variable declarations for initializing local variables
+- A short variable description can be used to call a function such as the example below where os.Open returns two values
+```go
+f, err := os.Open(name)
+if err != nil {
+return err
+}
+// ...use f...
+f.Close()
+```
+- A short variable declaration does not neccessarily declare all the variables of the left hand side, in the code below, the first statement declares both `in` and `err`. The second statement declares `out` but only assigns a value to the existing `err` variable.
+```go
+in, err := os.Open(infile)
+// ...
+out, err := os.Create(outfile)
+```
+- `var name string = "tomiwa"`, `var name type = expression`, either the type or the = expression part may be omitted, but not both.
+- `i, j := 0, 1`
+- `var i, j, k init`
 - `var name = "tomiwa"`
-- `var name string`
+- `var name string`, a variable `type` determines the characteristics of values it can take on, and the type of intrinsic operations that can be done on those values
 - `const ticketPrice = $70`
+- `s`, `s++`, `s--`, `s +=`
 - Printing formatted data in Go using `Println`; `fmt.Println("My name is", name, " and my ticket price is", ticketPrice, "dollars")`
 - Printing formatted data in Go using `printf`; `fmt.printf("The ticket price is %v.\n, ticketPrice")`
 
@@ -82,12 +119,14 @@ go run .
 
 ### Package Level Variables
 - Defined at the top outside all functions
-- They can be accessed inside any of the functions, and in all files/functions which are in the same `package`
+- They can be accessed inside any of the functions, and in all files/functions which are in the same `package ...`
 
 ### Global Variables
 - Declaration outside all functions and uppercase first letter
 - Global variables can be used everywhere across all packages 
 
+### Assignments 
+- The value held by a variable can be updated by an assignment statement, which in its simplest form has a variable on the left of the = sign and an expression on the right
 ### Data Types
 Go is a statically typed language, you need to tell the Go compiler the data type when declaring a variable; however, in most cases, Go can infer the data type of a variable when you assign a value.
 - Strings   eg. `var UserName string`
@@ -107,6 +146,14 @@ Go is a statically typed language, you need to tell the Go compiler the data typ
 - Pointers are special variables that points to the memory address of another variable(value)
     `var matchPrice = 50`
     `fmt.Println(&matchPrice)`
+    `&matchPrice--address of matchPrice`
+    `p := &matchPrice`
+    `*p = 70` # this expression sets the value of the `matchPrice` value to 70
+    `fmt.Println(matchPrice)`
+    `z := new(int)`
+    `fmt.Println(*z)`
+    `*z = 2`
+    `fmt.Println(*z)`
 
 ### Arrays and Slices 
 - Data structures to store collection of elements in a single variable, index-based
@@ -164,6 +211,13 @@ if condition {
 ```
 ```go
 if condition {
+
+} else {
+
+}
+```
+```go
+if condition; condition {
 
 } else {
 
