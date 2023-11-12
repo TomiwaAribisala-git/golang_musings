@@ -1,3 +1,3 @@
-module golang_tutorial_sessions
+module golang_tutorial
 
 go 1.18
