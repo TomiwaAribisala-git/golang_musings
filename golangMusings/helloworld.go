@@ -1,5 +1,5 @@
 // Package declaration//
-package golang_musings
+package golangMusings
 
 //Import declaration//
 import "fmt"

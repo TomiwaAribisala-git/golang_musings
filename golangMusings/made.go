@@ -1,4 +1,4 @@
-package golang_musings
+package golangMusings
 
 import "fmt"
 
