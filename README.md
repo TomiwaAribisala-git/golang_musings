@@ -6,10 +6,10 @@
 ### VS Code Go Extension
 
 ### Create Working Directory and Go file
-```
+```sh
 mkdir go_tutorial
 ```
-```
+```sh
 touch main.go
 ```
 
@@ -24,25 +24,28 @@ touch main.go
 [Organizing a Go Module](https://go.dev/doc/modules/layout#)
 
 ### Initialize Working Directory
-```
+```sh
 go mod init <module path>
 ```
 Module path can correspond to a repository you plan to publish your module.
 
 ### Go Commands
 - Go Build
-```
+```sh
 go build helloworld.go
 ```
-```
+```sh
 ./helloworld
 ```
 - Go Run
-```
+```sh
 go run helloworld.go
 ```
-- Go Format
+```sh
+go run .
 ```
+- Go Format
+```sh
 gofmt
 ```
 
@@ -56,14 +59,14 @@ gofmt
 ### Go Packages
 - Modularize your application
 - Go programs are organized into packages, a package is a collection of Go files
-- Variables and fucntions defined outside any function, can be accessed in all other files within the same package
+- Variables and functions defined outside any function, can be accessed in all other files within the same package
 - Execute all files in a package
-```
+```sh
 go run .
 ```
 - When working with multiple packages, create a directory/file as regards each package, you can also import packages between each other eg. `import <module_path>/package` then `package.(any function in the helper package)`
 - For importing functions between packages, make sure to capitalize the first letter of the function, this action exports the function and makes it importable in another package
-- You can also export variables, functions, constants, types; makes sure to capitalize the first letter of the data type to make it importable
+- You can also export variables, functions, constants, types; make sure to capitalize the first letter of the data type to make it importable
 
 ### Data Types
 - Go binary operators
@@ -73,15 +76,13 @@ go run .
 == != < <= > >= +=
 &&
 ||
-
 ```
 - Types
 - Integers: `int`, `unit`
-- Floating point numbers
-- Complex Numbers 
-- Booleans: `bool`---`true`, `false`
-- Strings: Packages for manipulating strings--`strings`, `strconv`, `bytes`, `unicode`
-
+- Floating point numbers: `float32`, `float64`
+- Complex Numbers: `complex64`, `complex128` 
+- Booleans: `bool`, `true`, `false`
+- Strings: packages for manipulating strings--`strings`, `strconv`, `bytes`, `unicode`
 
 ### Variables and Constants
 - `isValidEmail := tomiwaaribisala@gmail.com`   ## short variable declarations for initializing local variables
@@ -93,7 +94,6 @@ f, err := os.Open(name)
 if err != nil {
 return err
 }
-// ...use f...
 f.Close()
 ```
 - A short variable declaration does not neccessarily declare all the variables of the left hand side, in the code below, the first statement declares both `in` and `err`. The second statement declares `out` but only assigns a value to the existing `err` variable.
@@ -113,7 +113,7 @@ out, err := os.Create(outfile)
 - Printing formatted data in Go using `printf`; `fmt.printf("The ticket price is %v.\n, ticketPrice")`
 
 ### Local Variables
-- Defined inside a function or block
+- Defined inside a function or block; `a := 7`
 - Local variables can be accessed only inside that function or block of code
 - Best practice is to define variable as local as possible, create the variable where you need it 
 
@@ -122,66 +122,124 @@ out, err := os.Create(outfile)
 - They can be accessed inside any of the functions, and in all files/functions which are in the same `package ...`
 
 ### Global Variables
-- Declaration outside all functions and uppercase first letter
+- Variables denoted by uppercase first letter, declaration outside all functions
 - Global variables can be used everywhere across all packages 
 
 ### Assignments 
 - The value held by a variable can be updated by an assignment statement, which in its simplest form has a variable on the left of the = sign and an expression on the right
+
 ### Data Types
 Go is a statically typed language, you need to tell the Go compiler the data type when declaring a variable; however, in most cases, Go can infer the data type of a variable when you assign a value.
 - Strings   eg. `var UserName string`
 - Integers  eg. `var UserTickets int`, `var UserTickets uint`
+- Arrays  
 - Slices
 - Booleans  
-- Maps       
-- Arrays     
+- Maps          
+- Pointers
+- Structs
+- Methods
+- Interfaces
+- Closures
+- Channels
+- Goroutines
 
 ### User Input 
 - Using `fmt` package to collect user input; 
-    `var userName string`
-    `fmt.Println("Please enter your first name: ")`
-    `fmt.Scan(&userName)`
+```go
+var userName string
+fmt.Println("Please enter your first name: ")
+fmt.Scan(&userName)
+```
 
 ### Pointers
 - Pointers are special variables that points to the memory address of another variable(value)
-    `var matchPrice = 50`
-    `fmt.Println(&matchPrice)`
-    `&matchPrice--address of matchPrice`
-    `p := &matchPrice`
-    `*p = 70` # this expression sets the value of the `matchPrice` value to 70
-    `fmt.Println(matchPrice)`
-    `z := new(int)`
-    `fmt.Println(*z)`
-    `*z = 2`
-    `fmt.Println(*z)`
+```go
+var matchPrice = 50
+fmt.Println(&matchPrice) // &matchPrice is the memory address of matchPrice
+
+p := &matchPrice   
+*p = 70 // this expression sets the value of the matchPrice value to 70
+fmt.Println(matchPrice)
+
+z := new(int)
+fmt.Println(*z)
+*z = 2
+fmt.Println(*z)
+```
 
 ### Arrays and Slices 
 - Data structures to store collection of elements in a single variable, index-based
 - Arrays: 
-    `var bookings [50] string`
-    `var firstName string`
-    `var lastName string`
-    `fmt.Println("Please enter your first name: ")`
-    `fmt.Scan(&firstName)`
-    `fmt.Println("Please enter your last name: ")`
-    `fmt.Scan(&lastName)`
-    `bookings[0] = firstName + " " + lastName`
-    `fmt.Println("Welcome", firstName, lastName)`
+```go
+var bookings [50] string
+var firstName string
+var lastName string
+fmt.Println("Please enter your first name: ")
+fmt.Scan(&firstName)
+fmt.Println("Please enter your last name: ")
+fmt.Scan(&lastName)
+bookings[0] = firstName + " " + lastName
+fmt.Println("Welcome", firstName, lastName)
+```
 - Slices: an abstraction of an array, more flexible and powerful--variable-length or get a sub-array of its own, slices have a size like an array, but can be resized when needed. 
-	`var bookings [] string`
-	`var firstName string`
-	`var lastName string`
-	`fmt.Println("Please enter your first name: ")`
-	`fmt.Scan(&firstName)`
-	`fmt.Println("Please enter your last name: ")`
-	`fmt.Scan(&lastName)`
-	`bookings = append(bookings, firstName + " " + lastName)`
-	`fmt.Println("Thank you", firstName, lastName, "for inputting your name!")`
-	`fmt.Println("Print all our bookings:", bookings)`
+```go
+var bookings [] string
+var firstName string
+var lastName string
+fmt.Println("Please enter your first name: ")
+fmt.Scan(&firstName)
+fmt.Println("Please enter your last name: ")
+fmt.Scan(&lastName)
+bookings = append(bookings, firstName + " " + lastName)
+fmt.Println("Thank you", firstName, lastName, "for inputting your name!")
+fmt.Println("Print all our bookings:", bookings)
+```
+
+### Maps
+- Maps maps unique keys to values, you can retrieve the value later by using its key
+- All keys and values have the same data type, map supports only one data type at once
+```go
+var userData = []map[string]string
+userData["firstname"] = firstname
+userData["lastname"] = lastname
+userData["email"] = email
+```
+
+### Struct
+- Struct is a data structure that allows us to mix different data types, defines a structure(which fields) of the User Type
+```go
+type UserData struct {
+    firstName string
+    lastName string
+    email string
+    numberofTickets uint
+}
+```
+```go
+var userData = UserData {
+    firstName : firstName,
+    lastName: lastName, 
+    email: email,
+    numberofTickets: userTickets,
+}
+```
+
+### Goroutines(Concurrency)
+- Sequential code execution, make our program more efficient
+- Executing different parts of code in each separate thread(goroutine)
+```go
+func main() {
+
+}
+```
+```go
+go main()   // Go starts a new goroutine
+```
 
 ### Loops
 - Loops provide various control structures to control the applications flow
-- A loop statement allows us to execute code multiple times, in a loop
+- A loop statement allows us to execute code multiple times in a loop
 - `for loop`: execute code multiple times
 ```go
 for {
@@ -217,7 +275,7 @@ if condition {
 }
 ```
 ```go
-if condition; condition {
+if declaration; condition {
 
 } else {
 
@@ -323,45 +381,4 @@ greetUsers(confName)
 func greetUsers(confName string, firstName string, surName string) (bool, bool, bool) {
     return confName, firstName, surName
 }
-```
-
-### Maps
-- Maps maps unique keys to values, you can retrieve the value later by using its key
-- All keys and values have the same data type, map supports only one data type at once
-```go
-var userData = []map[string]string
-userData["firstname"] = firstname
-userData["lastname"] = lastname
-userData["email"] = email
-```
-
-### Struct
-- Struct is a data structure that allows us to mix different data types, defines a structure(which fields) of the User Type
-```go
-type UserData struct {
-    firstName string
-    lastName string
-    email string
-    numberofTickets uint
-}
-```
-```go
-var userData = UserData {
-    firstName string: firstName,
-    lastName: lastName, 
-    email: email,
-    numberofTickets: userTickets,
-}
-```
-
-### Goroutines(Concurrency)
-- Sequential code execution, make our program more efficient
-- Executing different parts of code in each separate thread(goroutine)
-```go
-func main() {
-
-}
-```
-```go
-go main()   // Go starts a new goroutine
 ```
