@@ -21,7 +21,59 @@ touch main.go
 [Golang Packages](https://pkg.go.dev/)
 
 ### Go Modules
-[Organizing a Go Module](https://go.dev/doc/modules/layout#)
+- A module is a collection of Go packages stored in a file tree with a go.mod file at its root. The go.mod file defines the module’s module path, which is also the import path used for the root directory, and its dependency requirements, which are the other modules needed for a successful build.
+- Go modules are group of related projects versioned and distributed together, they specify the requirements of a project, list all the required dependencies, and help us keep track of the specific versions of installed dependencies
+- Make the directory of a Go project a module using `go mod init (module path)`
+- Go Commands 
+```sh 
+go list -m all # print the current module dependencies
+```
+```go
+import "module"
+```
+```sh
+go get (module)
+```
+
+```sh
+go mod tidy # removes unused dependencies
+```
+- Adding a package/subdirectory(mypackage) to a module/root directory(mymodule)
+```sh
+mkdir mypackage
+```
+```sh
+cd mypackage
+nano mypackage.go
+```go
+package mypackage
+
+import "fmt"
+
+func PrintHello() {
+	fmt.Println("Hello, Modules! This is mypackage speaking!")
+}
+```
+```go
+package main
+
+import (
+	"fmt"
+
+	"mymodule/mypackage"
+)
+
+func main() {
+	fmt.Println("Hello, Modules!")
+
+	mypackage.PrintHello()
+}
+```
+- Adding a specific module version 
+Since Go modules are distributed from a version control repository, they can use version control features such as tags, branches, and even commits. You can reference these in your dependencies using the @ symbol at the end of the module path along with the version you’d like to use.
+```sh
+go get github.com/spf13/cobra@v1.1.1
+```
 
 ### Initialize Working Directory
 ```sh
@@ -320,17 +372,153 @@ p.lastName = "ova"
 fmt.Println(dennisinfo)
 ```
 
-### Goroutines(Concurrency)
-- Sequential code execution, make our program more efficient
-- Executing different parts of code in each separate thread(goroutine)
+### Interfaces 
+- Interfaces are named collections of method signatures
+- [Interfaces](https://gobyexample.com/interfaces)
+
+### Context
+ 
+### Type Assertions
+- Type assertions in Golang provide access to the exact type of variable of an interface. If already the data type is present in the interface, then it will retrieve the actual data type value held by the interface.
 ```go
+// Golang program to illustrate  
+// the concept of type assertions 
+package main 
+  
+import ( 
+    "fmt"
+) 
+  
+// main function 
+func main() { 
+      
+    // an interface that has  
+    // a string value 
+    var value interface{} = "GeeksforGeeks"
+      
+    // retrieving a value 
+    // of type string and assigning 
+    // it to value1 variable 
+    var value1 string = value.(string) 
+      
+    // printing the concrete value 
+    fmt.Println(value1) 
+      
+    // this will panic as interface 
+    // does not have int type 
+    var value2 int = value.(int) 
+      
+    fmt.Println(value2) 
+} 
+```
+
+### Goroutines(Concurrency)
+- A Goroutine is a function or method which executes independently and simultaneously in connection with any other Goroutines present in your program. Or in other words, every concurrently executing activity in Go language is known as a Goroutines
+- A `goroutine` is a lightweight thread of execution
+- Executing different parts of code in each separate thread(goroutine) managed concurrently by the Go runtime e.g. function calls running asychronously in separate goroutines, both `main` and `new` goroutines work concurrently
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func f(from string) {
+    for i := 0; i < 3; i++ {
+        fmt.Println(from, ":", i)
+    }
+}
+
 func main() {
 
+    f("direct")
+
+    go f("goroutine")
+
+    go func(msg string) {
+        fmt.Println(msg)
+    }("going")
+
+    time.Sleep(time.Second)
+    fmt.Println("done")
 }
 ```
+
+### Channels
+- A channel is a medium through which a goroutine communicates with another goroutine of which the communication is lock-free, a channel is a technique which let one goroutine to send data to another goroutine, the process is bidrectional
+- A channel only allows transfer of data of the same type, different data types are not allowed
 ```go
-go main()   // Go starts a new goroutine
+// Creating a channel
+var Channel_name chan Type
+channel_name:= make(chan Type)
+
+ch <- v    // Send v to channel ch.
+v := <-ch  // Receive from ch, and
+           // assign value to v.
 ```
+```go
+package main
+
+import "fmt"
+
+func main() {
+
+    messages := make(chan string)
+    
+    // Sending data to a channel
+    go func() { messages <- "ping" }()
+
+// Receiving data from a channel
+    msg := <-messages
+    fmt.Println(msg)
+}
+```
+
+### Buffer
+- The `buffer` belongs to the byte package of the Go language, and we can use these package to manipulate the byte of the string
+- [Golang-Biffer](https://www.educba.com/golang-buffer/)
+- [Bytes Buffer package](https://pkg.go.dev/bytes@go1.21.5)
+
+### Select
+- The `select` statement lets a goroutine wait on multiple communication operations
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+
+    c1 := make(chan string)
+    c2 := make(chan string)
+
+    go func() {
+        time.Sleep(1 * time.Second) // 1 second
+        c1 <- "one"
+    }()
+    go func() {
+        time.Sleep(2 * time.Second) // 2 second
+        c2 <- "two"
+    }()
+
+    for i := 0; i < 2; i++ {
+        select {
+        case msg1 := <-c1:
+            fmt.Println("received", msg1)
+        case msg2 := <-c2:
+            fmt.Println("received", msg2)
+        }
+    }
+}
+```
+
+### Working with JSON
+- [Marshalling and Unmarshalling data in Go](https://betterstack.com/community/guides/scaling-go/json-in-go/)
+- [Encoding and Decoding JSON data in Go](https://go.dev/blog/json)
+
 
 ### Loops
 - Loops provide various control structures to control application flow
