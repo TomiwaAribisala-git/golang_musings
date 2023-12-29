@@ -656,9 +656,12 @@ if err != nil {
     log.Fatal(err)
 }
 ```
+- [Error Handling in Go](https://go.dev/blog/error-handling-and-go, https://earthly.dev/blog/golang-errors/)
+- [Go Error Package](https://pkg.go.dev/errors@go1.17.5)
 - Deferred function calls: `defer`, a defer statement is often used with paired operations like open and close, connect and disconnect, or lock and unlock to ensure that resources are released in all cases, no matter how complex the control flow.
 - Panic is a built-in function that stops the ordinary flow of control and begins panicking. When the function F calls panic, execution of F stops, any deferred functions in F are executed normally, and then F returns to its caller.
-- Recover() is a built-in function in Go that is used to regain control of a panicking goroutine. When a panic() is called, the normal flow of the program is interrupted, and the deferred functions in the same goroutine are executed. You can use recover() within a deferred function to catch the panic value, handle the error, and prevent the program from crashing.
+- Recover() is a built-in function in Go that is used to regain control of a panicking goroutine. When a panic() is called, the normal flow of the program is interrupted, and the deferred functions in the same goroutine are executed. You can use recover() within a deferred function to catch the panic value, handle the error, and prevent the program from crashing. Recover is only useful inside deferred functions. During normal execution, a call to recover will return nil and have no other effect. If the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
+- [Defer, Panic and Recover](https://go.dev/blog/defer-panic-and-recover)
 
 ### Functions
 - A function is a group of statements that exist within a program for the purpose of performing a specific task
@@ -718,3 +721,11 @@ func greetUsers(confName string, firstName string, surName string) (bool, bool, 
     return confName, firstName, surName
 }
 ```
+
+### Building CLIs
+- [Cobra Website](https://cobra.dev/), [Cobra Library Documentation](https://pkg.go.dev/github.com/spf13/cobra)
+- [urfave/cli Website](https://cli.urfave.org/), [urfave/cli Website](https://github.com/urfave/cli)
+
+### GORM 
+- The GORM is fantastic ORM library for Golang, aims to be developer friendly. It is an ORM library for dealing with relational databases. 
+- [GORM Website](https://gorm.io/docs/index.html), [GORM Package](https://pkg.go.dev/gorm.io/gorm)
