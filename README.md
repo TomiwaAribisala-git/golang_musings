@@ -139,6 +139,19 @@ go run .
 ```
 
 ### Data Types
+- Type Declarations
+```go
+import "fmt"
+type Celsius float64
+type Fahrenheit float64
+const (
+AbsoluteZeroC Celsius = -273.15
+FreezingC Celsius = 0
+BoilingC Celsius = 100
+)
+func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9/5 + 32) }
+func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
+```
 - Go binary operators
 ```go
 * / % << >> & &^
@@ -224,6 +237,8 @@ fmt.Println("Please enter your first name: ")
 fmt.Scan(&userName)
 ```
 
+### Methods
+- Object Oriented Programming
 ### Pointers
 - Pointers are special variables that points to the memory address of another variable(value)
 ```go
@@ -266,26 +281,31 @@ fmt.Println("Please enter your first name: ")
 fmt.Scan(&firstName)
 fmt.Println("Please enter your last name: ")
 fmt.Scan(&lastName)
-bookings = append(bookings, firstName + " " + lastName)
+bookings = append(bookings, firstName + " " + lastName) // the append function
 fmt.Println("Thank you", firstName, lastName, "for inputting your name!")
 fmt.Println("Print all our bookings:", bookings)
 ```
 - A slice can be formed by specifying two indices, a low and high bound, separated by a colon, `a[1:4]`, describing a section of an underlying array
 - Changing the elements of a slice modifies the corresponding elements of its underlying array
-- Length and Capacity of a slice
+- Integrating a Slice into a function
 - Creating a slice with the `make()` function
 ```go
 slice_name := make([]type, length, capacity)
 ```
+- Length of a Slice 
+- Capcacity of a Slice
 
 ### Maps
 - Maps maps unique keys to values, you can retrieve the value later by using its key
 - All keys and values have the same data type, map supports only one data type at once
 ```go
+map[K]V
 var userData = []map[string]string 
 userData["firstname"] = firstname
 userData["lastname"] = lastname
 userData["email"] = email
+
+delete(userData, "firstname") // deleting an element from a map
 
 var timeZone = map[string]int{
     "dennis": 42
@@ -304,7 +324,7 @@ m["Question"] = 21
 m["Answer"] = 42
 // The make()function is the right way to create an empty map. If you make an empty map in a different way and write to it, it will causes a runtime panic.
 ```
-- Adding/Updating elements in a map
+- Adding/Updating/Retrieving elements in a map
 - Deleting elements in a map: `delete(map, key_name)`
 - Checking for specific elements in a map 
 ```go
@@ -323,6 +343,7 @@ for i, v := range m {
     fmt.Println(i) // Print index
 }
 ```
+- Integrating a Map into a function
 
 ### Make()
 - Go in-built function `make` which helps create/intialize slices, maps and channels
@@ -340,7 +361,7 @@ employee["Sandy"] = 20
 channelName := make(chan int)
 ```
 
-### Struct
+### Structs
 - Struct is a data structure that allows us to mix different data types, defines a structure(which fields) of the User Type
 ```go
 type UserData struct {
@@ -375,9 +396,142 @@ fmt.Println(dennisinfo)
 ### Interfaces 
 - Interfaces are named collections of method signatures
 - [Interfaces](https://gobyexample.com/interfaces)
+```go
+package main
 
+import "fmt"
+
+type I interface {
+	M()
+}
+
+type T struct {
+	S string
+}
+
+// This method means type T implements the interface I,
+// but we don't need to explicitly declare that it does so.
+func (t T) M() {
+	fmt.Println(t.S)
+}
+
+func main() {
+	var i I = T{"hello"}
+	i.M()
+}
+```
+```go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+type I interface {
+	M()
+}
+
+type T struct {
+	S string
+}
+
+func (t *T) M() {
+	fmt.Println(t.S)
+}
+// In Go, when you see `*T` as a receiver for a method, it means that the method is associated with a pointer to an instance of the T type, `(t *T)` is the receiver of the method M(). It specifies the type on which the method operates. In this case, the receiver is a pointer to an instance of the T type.
+// When a method has a pointer receiver, it means that the method can modify the fields of the receiver, and changes made to the receiver inside the method will affect the original instance of the type.
+// For example, if you have an instance of T:
+instance := T{"Hello, World!"}
+// You can call the method M() on this instance:
+instance.M()
+// However, since M() has a pointer receiver, Go will automatically take the address of instance for you. So, the call is effectively the same as if you did:
+(&instance).M()
+// This allows the method to modify the fields of the original instance if needed.
+
+In Go, *T represents a pointer to a type T. Let me break it down:
+
+T: This is a type, and *T indicates a pointer to that type.
+*: The asterisk * is the pointer-indirection operator in Go.
+For example, if you have a type T:
+
+type T struct {
+    // fields
+}
+Then, *T would represent a pointer to this type:
+
+var tInstance T
+var tPointer *T
+
+tPointer = &tInstance // Assign the address of tInstance to tPointer
+In this case, tPointer is a pointer variable that can hold the memory address of a variable of type T. The & operator is used to obtain the address of a variable.
+
+When you see a method receiver like (t *T) in a method declaration:
+
+func (t *T) methodName() {
+    // Method implementation
+}
+It means that the method is associated with a pointer to an instance of type T. This allows the method to modify the fields of the original instance and not just receive a copy of the instance. The * in (t *T) denotes that the receiver is a pointer.
+
+
+type F float64
+
+func (f F) M() {
+	fmt.Println(f)
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+type geometry interface {
+    area() float64
+    perim() float64
+}
+
+type rect struct {
+    width, height float64
+}
+type circle struct {
+    radius float64
+}
+
+func (r rect) area() float64 {
+    return r.width * r.height
+}
+func (r rect) perim() float64 {
+    return 2*r.width + 2*r.height
+}
+
+func (c circle) area() float64 {
+    return math.Pi * c.radius * c.radius
+}
+func (c circle) perim() float64 {
+    return 2 * math.Pi * c.radius
+}
+
+func measure(g geometry) {
+    fmt.Println(g)
+    fmt.Println(g.area())
+    fmt.Println(g.perim())
+}
+
+func main() {
+    r := rect{width: 3, height: 4}
+    c := circle{radius: 5}
+
+    measure(r)
+    measure(c)
+}
+```
 ### Context
- 
+- Concept of Context
+
 ### Type Assertions
 - Type assertions in Golang provide access to the exact type of variable of an interface. If already the data type is present in the interface, then it will retrieve the actual data type value held by the interface.
 ```go
@@ -655,9 +809,22 @@ f, err := os.Open("filename.ext")
 if err != nil {
     log.Fatal(err)
 }
+f.Close()
 ```
+- Error handling is important is golang as sometimes code success is not assured, which depends on factors beyond the programmer control. For example, any function that does I/O must confront the possibility of an error
+- An `error` may be `nil` or `non-nil`, `nil` implies success and `non-nil` implies failure, a `non-nil` error has an error message string which we can obtain by calling its Error method or print by calling `fmt.Println(err)` or `fmt.Printf("%v", err)`.
+- Two things to note in the Go Programming Language book about errors
 - [Error Handling in Go](https://go.dev/blog/error-handling-and-go, https://earthly.dev/blog/golang-errors/)
 - [Go Error Package](https://pkg.go.dev/errors@go1.17.5)
+- When designing error messages, be deliberate, so that each one is a meaningful description of the problem with sufficient and relevant detail, and be consistent, so that errors returned by the same function or by a group of functions in the same package are similar in form and can be dealt wit h in the same way.
+- For example, the os package guarantees that every error returned by a file operat ion, such as os.Open or the Read, Write, or Close methods of an open file, des rib es not just the nature of the failure (permission denied, no such directory, and so on) but also the name of the file, so the caller needn’t include this information in the error message it constructs.
+```go
+doc, err := html.Parse(resp.Body)
+resp.Body.Close()
+if err != nil {
+return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
+}
+```
 - Deferred function calls: `defer`, a defer statement is often used with paired operations like open and close, connect and disconnect, or lock and unlock to ensure that resources are released in all cases, no matter how complex the control flow.
 - Panic is a built-in function that stops the ordinary flow of control and begins panicking. When the function F calls panic, execution of F stops, any deferred functions in F are executed normally, and then F returns to its caller.
 - Recover() is a built-in function in Go that is used to regain control of a panicking goroutine. When a panic() is called, the normal flow of the program is interrupted, and the deferred functions in the same goroutine are executed. You can use recover() within a deferred function to catch the panic value, handle the error, and prevent the program from crashing. Recover is only useful inside deferred functions. During normal execution, a call to recover will return nil and have no other effect. If the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
@@ -701,7 +868,21 @@ greetUsers()
 greetUsers(confName)
 ```
 - Every function has at least one `function()`, which is the `main()` function
+- Concept of bare `return`
+- Variadic functions: A variadic function is one that has a varying number of parameters which is written as `func sum(vals ...int) int` and can be called with a varying number of arguments
+```go
+func sum(vals ...int) int {
+total := 0
+for _, val := range vals {
+total += val
+}
+return total
+}
 
+fmt.Println(sum()) // "0"
+fmt.Println(sum(3)) // "3"
+fmt.Println(sum(1, 2, 3, 4)) // "10"
+```
 ### Go Type Conversions
 - Assignment between items of different type in Go requires explicit conversion
 ```go
