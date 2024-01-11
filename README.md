@@ -300,7 +300,7 @@ slice_name := make([]type, length, capacity)
 - All keys and values have the same data type, map supports only one data type at once
 ```go
 map[K]V
-var userData = []map[string]string 
+var userData = map[string]string 
 userData["firstname"] = firstname
 userData["lastname"] = lastname
 userData["email"] = email
@@ -319,7 +319,7 @@ j := map[string]int{
     "froy": 15
 }
 
-m := make([]map[string]int)
+m := make(map[string]int)
 m["Question"] = 21
 m["Answer"] = 42
 // The make()function is the right way to create an empty map. If you make an empty map in a different way and write to it, it will cause a runtime panic.
@@ -337,7 +337,7 @@ fmt.Println(ok1)
 ```
 - Iterating over a map
 ```go
-m := make([]map[string]int)
+m := make(map[string]int)
 
 for i, v := range m {
     fmt.Println(i) // Print index
@@ -353,7 +353,7 @@ var intSlice = make([]int, 10)
 var strSlice = make([]string, 10, 20)
 
 //Initializing a map
- var employee = make(map[string]int)
+var employee = make(map[string]int)
 employee["Mark"] = 10
 employee["Sandy"] = 20
 

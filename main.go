@@ -13,3 +13,7 @@ func main() {
 	fmt.Println(quote.Go())
 	bran()
 }
+
+func sed(c []int) {}
+
+func sec(m map[string]int) {}
