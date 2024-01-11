@@ -17,8 +17,8 @@ touch main.go
 [Golang Documentation](https://go.dev/doc/)
 
 ### Go Packages
-[Golang Standard Library](https://pkg.go.dev/std)
-[Golang Packages](https://pkg.go.dev/)
+- [Golang Standard Library](https://pkg.go.dev/std)
+- [Golang Packages](https://pkg.go.dev/)
 
 ### Go Modules
 - A module is a collection of Go packages stored in a file tree with a go.mod file at its root. The go.mod file defines the module’s module path, which is also the import path used for the root directory, and its dependency requirements, which are the other modules needed for a successful build.
@@ -165,7 +165,7 @@ func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
 - Floating point numbers: `float32`, `float64`
 - Complex Numbers: `complex64`, `complex128` 
 - Booleans: `bool`, `true`, `false`
-- Strings: packages for manipulating strings--`strings`, `strconv`, `bytes`, `unicode`
+- Strings: packages for manipulating strings:`strings`, `strconv`, `bytes`, `unicode`
 
 ### Variables and Constants
 - `isValidEmail := tomiwaaribisala@gmail.com`   ## short variable declarations for initializing local variables
@@ -322,7 +322,7 @@ j := map[string]int{
 m := make([]map[string]int)
 m["Question"] = 21
 m["Answer"] = 42
-// The make()function is the right way to create an empty map. If you make an empty map in a different way and write to it, it will causes a runtime panic.
+// The make()function is the right way to create an empty map. If you make an empty map in a different way and write to it, it will cause a runtime panic.
 ```
 - Adding/Updating/Retrieving elements in a map
 - Deleting elements in a map: `delete(map, key_name)`
