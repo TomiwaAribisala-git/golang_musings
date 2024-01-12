@@ -141,9 +141,12 @@ go run .
 ### Data Types
 - Type Declarations
 ```go
+package main 
+
 import "fmt"
 type Celsius float64
 type Fahrenheit float64
+
 const (
 AbsoluteZeroC Celsius = -273.15
 FreezingC Celsius = 0
@@ -218,16 +221,16 @@ Go is a statically typed language, you need to tell the Go compiler the data typ
 - Floats
 - Booleans  
 - Complex Numbers
+- Pointers
 - Arrays  
 - Slices
 - Maps          
-- Pointers
 - Structs
 - Methods
 - Interfaces
-- Closures
-- Channels
 - Goroutines
+- Channels
+- Closures
 
 ### User Input 
 - Using `fmt` package to collect user input; 
@@ -237,8 +240,6 @@ fmt.Println("Please enter your first name: ")
 fmt.Scan(&userName)
 ```
 
-### Methods
-- Object Oriented Programming
 ### Pointers
 - Pointers are special variables that points to the memory address of another variable(value)
 ```go
@@ -393,287 +394,6 @@ p.lastName = "ova"
 fmt.Println(dennisinfo)
 ```
 
-### Interfaces 
-- Interfaces are named collections of method signatures
-- [Interfaces](https://gobyexample.com/interfaces)
-```go
-package main
-
-import "fmt"
-
-type I interface {
-	M()
-}
-
-type T struct {
-	S string
-}
-
-// This method means type T implements the interface I,
-// but we don't need to explicitly declare that it does so.
-func (t T) M() {
-	fmt.Println(t.S)
-}
-
-func main() {
-	var i I = T{"hello"}
-	i.M()
-}
-```
-```go
-package main
-
-import (
-	"fmt"
-	"math"
-)
-
-type I interface {
-	M()
-}
-
-type T struct {
-	S string
-}
-
-func (t *T) M() {
-	fmt.Println(t.S)
-}
-// In Go, when you see `*T` as a receiver for a method, it means that the method is associated with a pointer to an instance of the T type, `(t *T)` is the receiver of the method M(). It specifies the type on which the method operates. In this case, the receiver is a pointer to an instance of the T type.
-// When a method has a pointer receiver, it means that the method can modify the fields of the receiver, and changes made to the receiver inside the method will affect the original instance of the type.
-// For example, if you have an instance of T:
-instance := T{"Hello, World!"}
-// You can call the method M() on this instance:
-instance.M()
-// However, since M() has a pointer receiver, Go will automatically take the address of instance for you. So, the call is effectively the same as if you did:
-(&instance).M()
-// This allows the method to modify the fields of the original instance if needed.
-
-In Go, *T represents a pointer to a type T. Let me break it down:
-
-T: This is a type, and *T indicates a pointer to that type.
-*: The asterisk * is the pointer-indirection operator in Go.
-For example, if you have a type T:
-
-type T struct {
-    // fields
-}
-Then, *T would represent a pointer to this type:
-
-var tInstance T
-var tPointer *T
-
-tPointer = &tInstance // Assign the address of tInstance to tPointer
-In this case, tPointer is a pointer variable that can hold the memory address of a variable of type T. The & operator is used to obtain the address of a variable.
-
-When you see a method receiver like (t *T) in a method declaration:
-
-func (t *T) methodName() {
-    // Method implementation
-}
-It means that the method is associated with a pointer to an instance of type T. This allows the method to modify the fields of the original instance and not just receive a copy of the instance. The * in (t *T) denotes that the receiver is a pointer.
-
-
-type F float64
-
-func (f F) M() {
-	fmt.Println(f)
-}
-```
-
-```go
-package main
-
-import (
-    "fmt"
-    "math"
-)
-
-type geometry interface {
-    area() float64
-    perim() float64
-}
-
-type rect struct {
-    width, height float64
-}
-type circle struct {
-    radius float64
-}
-
-func (r rect) area() float64 {
-    return r.width * r.height
-}
-func (r rect) perim() float64 {
-    return 2*r.width + 2*r.height
-}
-
-func (c circle) area() float64 {
-    return math.Pi * c.radius * c.radius
-}
-func (c circle) perim() float64 {
-    return 2 * math.Pi * c.radius
-}
-
-func measure(g geometry) {
-    fmt.Println(g)
-    fmt.Println(g.area())
-    fmt.Println(g.perim())
-}
-
-func main() {
-    r := rect{width: 3, height: 4}
-    c := circle{radius: 5}
-
-    measure(r)
-    measure(c)
-}
-```
-### Context
-- Concept of Context
-
-### Type Assertions
-- Type assertions in Golang provide access to the exact type of variable of an interface. If already the data type is present in the interface, then it will retrieve the actual data type value held by the interface.
-```go
-// Golang program to illustrate  
-// the concept of type assertions 
-package main 
-  
-import ( 
-    "fmt"
-) 
-  
-// main function 
-func main() { 
-      
-    // an interface that has  
-    // a string value 
-    var value interface{} = "GeeksforGeeks"
-      
-    // retrieving a value 
-    // of type string and assigning 
-    // it to value1 variable 
-    var value1 string = value.(string) 
-      
-    // printing the concrete value 
-    fmt.Println(value1) 
-      
-    // this will panic as interface 
-    // does not have int type 
-    var value2 int = value.(int) 
-      
-    fmt.Println(value2) 
-} 
-```
-
-### Goroutines(Concurrency)
-- A Goroutine is a function or method which executes independently and simultaneously in connection with any other Goroutines present in your program. Or in other words, every concurrently executing activity in Go language is known as a Goroutines
-- A `goroutine` is a lightweight thread of execution
-- Executing different parts of code in each separate thread(goroutine) managed concurrently by the Go runtime e.g. function calls running asychronously in separate goroutines, both `main` and `new` goroutines work concurrently
-```go
-package main
-
-import (
-    "fmt"
-    "time"
-)
-
-func f(from string) {
-    for i := 0; i < 3; i++ {
-        fmt.Println(from, ":", i)
-    }
-}
-
-func main() {
-
-    f("direct")
-
-    go f("goroutine")
-
-    go func(msg string) {
-        fmt.Println(msg)
-    }("going")
-
-    time.Sleep(time.Second)
-    fmt.Println("done")
-}
-```
-
-### Channels
-- A channel is a medium through which a goroutine communicates with another goroutine of which the communication is lock-free, a channel is a technique which let one goroutine to send data to another goroutine, the process is bidrectional
-- A channel only allows transfer of data of the same type, different data types are not allowed
-```go
-// Creating a channel
-var Channel_name chan Type
-channel_name:= make(chan Type)
-
-ch <- v    // Send v to channel ch.
-v := <-ch  // Receive from ch, and
-           // assign value to v.
-```
-```go
-package main
-
-import "fmt"
-
-func main() {
-
-    messages := make(chan string)
-    
-    // Sending data to a channel
-    go func() { messages <- "ping" }()
-
-// Receiving data from a channel
-    msg := <-messages
-    fmt.Println(msg)
-}
-```
-
-### Buffer
-- The `buffer` belongs to the byte package of the Go language, and we can use these package to manipulate the byte of the string
-- [Golang-Biffer](https://www.educba.com/golang-buffer/)
-- [Bytes Buffer package](https://pkg.go.dev/bytes@go1.21.5)
-
-### Select
-- The `select` statement lets a goroutine wait on multiple communication operations
-```go
-package main
-
-import (
-    "fmt"
-    "time"
-)
-
-func main() {
-
-    c1 := make(chan string)
-    c2 := make(chan string)
-
-    go func() {
-        time.Sleep(1 * time.Second) // 1 second
-        c1 <- "one"
-    }()
-    go func() {
-        time.Sleep(2 * time.Second) // 2 second
-        c2 <- "two"
-    }()
-
-    for i := 0; i < 2; i++ {
-        select {
-        case msg1 := <-c1:
-            fmt.Println("received", msg1)
-        case msg2 := <-c2:
-            fmt.Println("received", msg2)
-        }
-    }
-}
-```
-
-### Working with JSON
-- [Marshalling and Unmarshalling data in Go](https://betterstack.com/community/guides/scaling-go/json-in-go/)
-- [Encoding and Decoding JSON data in Go](https://go.dev/blog/json)
-
-
 ### Loops
 - Loops provide various control structures to control application flow
 - A loop statement allows us to execute a block of code repeatedly
@@ -813,11 +533,11 @@ f.Close()
 ```
 - Error handling is important is golang as sometimes code success is not assured, which depends on factors beyond the programmer control. For example, any function that does I/O must confront the possibility of an error
 - An `error` may be `nil` or `non-nil`, `nil` implies success and `non-nil` implies failure, a `non-nil` error has an error message string which we can obtain by calling its Error method or print by calling `fmt.Println(err)` or `fmt.Printf("%v", err)`.
-- Two things to note in the Go Programming Language book about errors
-- [Error Handling in Go](https://go.dev/blog/error-handling-and-go, https://earthly.dev/blog/golang-errors/)
+- [Error Handling in Go](https://go.dev/blog/error-handling-and-go) 
+- [Error Handling in Go](https://earthly.dev/blog/golang-errors/)
 - [Go Error Package](https://pkg.go.dev/errors@go1.17.5)
-- When designing error messages, be deliberate, so that each one is a meaningful description of the problem with sufficient and relevant detail, and be consistent, so that errors returned by the same function or by a group of functions in the same package are similar in form and can be dealt wit h in the same way.
-- For example, the os package guarantees that every error returned by a file operat ion, such as os.Open or the Read, Write, or Close methods of an open file, des rib es not just the nature of the failure (permission denied, no such directory, and so on) but also the name of the file, so the caller needn’t include this information in the error message it constructs.
+- When designing error messages, be deliberate, so that each one is a meaningful description of the problem with sufficient and relevant detail, and be consistent, so that errors returned by the same function or by a group of functions in the same package are similar in form and can be dealt with in the same way.
+- For example, the os package guarantees that every error returned by a file operation, such as os.Open or the Read, Write, or Close methods of an open file, describes not just the nature of the failure (permission denied, no such directory, and so on) but also the name of the file, so the caller needn’t include this information in the error message it constructs.
 ```go
 doc, err := html.Parse(resp.Body)
 resp.Body.Close()
@@ -902,6 +622,283 @@ func greetUsers(confName string, firstName string, surName string) (bool, bool, 
     return confName, firstName, surName
 }
 ```
+
+### Interfaces 
+- Interfaces are named collections of method signatures
+- [Interfaces](https://gobyexample.com/interfaces)
+```go
+package main
+
+import "fmt"
+
+type I interface {
+	M()
+}
+
+type T struct {
+	S string
+}
+
+// This method means type T implements the interface I,
+// but we don't need to explicitly declare that it does so.
+func (t T) M() {
+	fmt.Println(t.S)
+}
+
+func main() {
+	var i I = T{"hello"}
+	i.M()
+}
+```
+```go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+type I interface {
+	M()
+}
+
+type T struct {
+	S string
+}
+
+func (t *T) M() {
+	fmt.Println(t.S)
+}
+// In Go, when you see `*T` as a receiver for a method, it means that the method is associated with a pointer to an instance of the T type, `(t *T)` is the receiver of the method M(). It specifies the type on which the method operates. In this case, the receiver is a pointer to an instance of the T type.
+// When a method has a pointer receiver, it means that the method can modify the fields of the receiver, and changes made to the receiver inside the method will affect the original instance of the type.
+// For example, if you have an instance of T:
+instance := T{"Hello, World!"}
+// You can call the method M() on this instance:
+instance.M()
+// However, since M() has a pointer receiver, Go will automatically take the address of instance for you. So, the call is effectively the same as if you did:
+(&instance).M()
+// This allows the method to modify the fields of the original instance if needed.
+
+In Go, *T represents a pointer to a type T. Let me break it down:
+
+T: This is a type, and *T indicates a pointer to that type.
+*: The asterisk * is the pointer-indirection operator in Go.
+For example, if you have a type T:
+
+type T struct {
+    // fields
+}
+Then, *T would represent a pointer to this type:
+
+var tInstance T
+var tPointer *T
+
+tPointer = &tInstance // Assign the address of tInstance to tPointer
+In this case, tPointer is a pointer variable that can hold the memory address of a variable of type T. The & operator is used to obtain the address of a variable.
+
+When you see a method receiver like (t *T) in a method declaration:
+
+func (t *T) methodName() {
+    // Method implementation
+}
+It means that the method is associated with a pointer to an instance of type T. This allows the method to modify the fields of the original instance and not just receive a copy of the instance. The * in (t *T) denotes that the receiver is a pointer.
+
+type F float64
+
+func (f F) M() {
+	fmt.Println(f)
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+type geometry interface {
+    area() float64
+    perim() float64
+}
+
+type rect struct {
+    width, height float64
+}
+type circle struct {
+    radius float64
+}
+
+func (r rect) area() float64 {
+    return r.width * r.height
+}
+func (r rect) perim() float64 {
+    return 2*r.width + 2*r.height
+}
+
+func (c circle) area() float64 {
+    return math.Pi * c.radius * c.radius
+}
+func (c circle) perim() float64 {
+    return 2 * math.Pi * c.radius
+}
+
+func measure(g geometry) {
+    fmt.Println(g)
+    fmt.Println(g.area())
+    fmt.Println(g.perim())
+}
+
+func main() {
+    r := rect{width: 3, height: 4}
+    c := circle{radius: 5}
+
+    measure(r)
+    measure(c)
+}
+```
+
+### Type Assertions
+- Type assertions in Golang provide access to the exact type of variable of an interface. If already the data type is present in the interface, then it will retrieve the actual data type value held by the interface.
+```go
+// Golang program to illustrate  
+// the concept of type assertions 
+package main 
+  
+import ( 
+    "fmt"
+) 
+  
+// main function 
+func main() { 
+      
+    // an interface that has  
+    // a string value 
+    var value interface{} = "GeeksforGeeks"
+      
+    // retrieving a value 
+    // of type string and assigning 
+    // it to value1 variable 
+    var value1 string = value.(string) 
+      
+    // printing the concrete value 
+    fmt.Println(value1) 
+      
+    // this will panic as interface 
+    // does not have int type 
+    var value2 int = value.(int) 
+      
+    fmt.Println(value2) 
+} 
+```
+
+### Goroutines(Concurrency)
+- A Goroutine is a function or method which executes independently and simultaneously in connection with any other Goroutines present in your program. Or in other words, every concurrently executing activity in Go language is known as a Goroutines
+- A `goroutine` is a lightweight thread of execution
+- Executing different parts of code in each separate thread(goroutine) managed concurrently by the Go runtime e.g. function calls running asychronously in separate goroutines, both `main` and `new` goroutines work concurrently
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func f(from string) {
+    for i := 0; i < 3; i++ {
+        fmt.Println(from, ":", i)
+    }
+}
+
+func main() {
+
+    f("direct")
+
+    go f("goroutine")
+
+    go func(msg string) {
+        fmt.Println(msg)
+    }("going")
+
+    time.Sleep(time.Second)
+    fmt.Println("done")
+}
+```
+
+### Channels
+- A channel is a medium through which a goroutine communicates with another goroutine of which the communication is lock-free, a channel is a technique which let one goroutine to send data to another goroutine, the process is bidrectional
+- A channel only allows transfer of data of the same type, different data types are not allowed
+```go
+// Creating a channel
+var Channel_name chan Type
+channel_name:= make(chan Type)
+
+ch <- v    // Send v to channel ch.
+v := <-ch  // Receive from ch, and
+           // assign value to v.
+```
+```go
+package main
+
+import "fmt"
+
+func main() {
+
+    messages := make(chan string)
+    
+    // Sending data to a channel
+    go func() { messages <- "ping" }()
+
+// Receiving data from a channel
+    msg := <-messages
+    fmt.Println(msg)
+}
+```
+
+### Select
+- The `select` statement lets a goroutine wait on multiple communication operations
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+
+    c1 := make(chan string)
+    c2 := make(chan string)
+
+    go func() {
+        time.Sleep(1 * time.Second) // 1 second
+        c1 <- "one"
+    }()
+    go func() {
+        time.Sleep(2 * time.Second) // 2 second
+        c2 <- "two"
+    }()
+
+    for i := 0; i < 2; i++ {
+        select {
+        case msg1 := <-c1:
+            fmt.Println("received", msg1)
+        case msg2 := <-c2:
+            fmt.Println("received", msg2)
+        }
+    }
+}
+```
+
+### Buffer
+- The `buffer` belongs to the byte package of the Go language, and we can use these package to manipulate the byte of the string
+- [Golang-Biffer](https://www.educba.com/golang-buffer/)
+- [Bytes Buffer package](https://pkg.go.dev/bytes@go1.21.5)
+
+### Working with JSON
+- [Marshalling and Unmarshalling data in Go](https://betterstack.com/community/guides/scaling-go/json-in-go/)
+- [Encoding and Decoding JSON data in Go](https://go.dev/blog/json)
 
 ### Building CLIs
 - [Cobra Website](https://cobra.dev/), [Cobra Library Documentation](https://pkg.go.dev/github.com/spf13/cobra)
