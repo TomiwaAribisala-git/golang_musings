@@ -101,6 +101,67 @@ go run .
 gofmt
 ```
 
+### Go Testing
+- Unit Tests, Integration Tests
+- Create a _test.go file
+- Test functions must have the form TestName, where Name says something about the specific test
+- Test functions take a pointer to the `testing` package `testing.T` type as a parameter, you use the parameter's(`t`) methods for reporting and logging from your test
+- Testing code typically lives in the same package as the code it test
+- `t.Error*` will report test failures but continue executing the test, `t.Fatal*` will report test failures and stop the test immediately.
+```go
+package greetings
+
+import (
+    "testing"
+    "regexp"
+)
+
+// TestHelloName calls greetings.Hello with a name, checking
+// for a valid return value.
+func TestHelloName(t *testing.T) {
+    name := "Gladys"
+    want := regexp.MustCompile(`\b`+name+`\b`)
+    msg, err := Hello("Gladys")
+    if !want.MatchString(msg) || err != nil {
+        t.Fatalf(`Hello("Gladys") = %q, %v, want match for %#q, nil`, msg, err, want)
+    }
+}
+
+// TestHelloEmpty calls greetings.Hello with an empty string,
+// checking for an error.
+func TestHelloEmpty(t *testing.T) {
+    msg, err := Hello("")
+    if msg != "" || err == nil {
+        t.Fatalf(`Hello("") = %q, %v, want "", error`, msg, err)
+    }
+}
+```
+```go
+package main
+import (
+    "fmt"
+    "testing"
+)
+
+func IntMin(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func TestIntMinBasic(t *testing.T) {
+    ans := IntMin(2, -2)
+    if ans != -2 {
+        t.Errorf("IntMin(2, -2) = %d; want -2", ans)
+    }
+}
+```
+```sh
+go test -v
+```
+- [Table Driven Tests wit Golang](https://quii.gitbook.io/learn-go-with-tests/)
+
 ### Notes
 - Your Go file must belong to a package. the first statement in a Go file must be `package ...`, each source file begins with a `package` declaration--which states the package the file belongs to, then followed by a list of other packages the file imports
 - The `import` declaration must follow the `package` declaration
@@ -669,7 +730,8 @@ type T struct {
 func (t *T) M() {
 	fmt.Println(t.S)
 }
-// In Go, when you see `*T` as a receiver for a method, it means that the method is associated with a pointer to an instance of the T type, `(t *T)` is the receiver of the method M(). It specifies the type on which the method operates. In this case, the receiver is a pointer to an instance of the T type.
+// In Go, when you see `*T` as a receiver for a method, it means that the method is associated with a pointer to an instance of the T type, `(t *T)` is the receiver of the method M(). 
+//It specifies the type on which the method operates. In this case, the receiver is a pointer to an instance of the T type.
 // When a method has a pointer receiver, it means that the method can modify the fields of the receiver, and changes made to the receiver inside the method will affect the original instance of the type.
 // For example, if you have an instance of T:
 instance := T{"Hello, World!"}
