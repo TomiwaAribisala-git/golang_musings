@@ -583,6 +583,189 @@ switch city {
 }
 ```
 
+### Command Line Arguments
+```go
+package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func main() {
+
+    argsWithProg := os.Args
+    argsWithoutProg := os.Args[1:]
+
+    arg := os.Args[3]
+
+    fmt.Println(argsWithProg)
+    fmt.Println(argsWithoutProg)
+    fmt.Println(arg)
+}
+```
+
+### Command Line Flags
+- Note that the flag package requires all flags to appear before positional arguments (otherwise the flags will be interpreted as positional arguments).
+```go
+package main
+
+import (
+    "flag"
+    "fmt"
+)
+
+func main() {
+
+    wordPtr := flag.String("word", "foo", "a string")
+
+    numbPtr := flag.Int("numb", 42, "an int")
+    forkPtr := flag.Bool("fork", false, "a bool")
+
+    var svar string
+    flag.StringVar(&svar, "svar", "bar", "a string var")
+
+    flag.Parse()
+
+    fmt.Println("word:", *wordPtr)
+    fmt.Println("numb:", *numbPtr)
+    fmt.Println("fork:", *forkPtr)
+    fmt.Println("svar:", svar)
+    fmt.Println("tail:", flag.Args())
+}
+```
+
+### Command Line Subcommands
+```go
+package main
+
+import (
+    "flag"
+    "fmt"
+    "os"
+)
+
+func main() {
+
+    fooCmd := flag.NewFlagSet("foo", flag.ExitOnError)
+    fooEnable := fooCmd.Bool("enable", false, "enable")
+    fooName := fooCmd.String("name", "", "name")
+
+    barCmd := flag.NewFlagSet("bar", flag.ExitOnError)
+    barLevel := barCmd.Int("level", 0, "level")
+
+    if len(os.Args) < 2 {
+        fmt.Println("expected 'foo' or 'bar' subcommands")
+        os.Exit(1)
+    }
+
+    switch os.Args[1] {
+
+    case "foo":
+        fooCmd.Parse(os.Args[2:])
+        fmt.Println("subcommand 'foo'")
+        fmt.Println("  enable:", *fooEnable)
+        fmt.Println("  name:", *fooName)
+        fmt.Println("  tail:", fooCmd.Args())
+    case "bar":
+        barCmd.Parse(os.Args[2:])
+        fmt.Println("subcommand 'bar'")
+        fmt.Println("  level:", *barLevel)
+        fmt.Println("  tail:", barCmd.Args())
+    default:
+        fmt.Println("expected 'foo' or 'bar' subcommands")
+        os.Exit(1)
+    }
+}
+```
+
+### Environment Variables
+```go
+package main
+
+import (
+    "fmt"
+    "os"
+    "strings"
+)
+
+func main() {
+
+    os.Setenv("FOO", "1")
+    fmt.Println("FOO:", os.Getenv("FOO"))
+    fmt.Println("BAR:", os.Getenv("BAR"))
+
+    fmt.Println()
+    for _, e := range os.Environ() {
+        pair := strings.SplitN(e, "=", 2)
+        fmt.Println(pair[0])
+    }
+}
+```
+
+### HTTP Client
+```go
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+
+    resp, err := http.Get("https://gobyexample.com")
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    fmt.Println("Response status:", resp.Status)
+
+    scanner := bufio.NewScanner(resp.Body)
+    for i := 0; scanner.Scan() && i < 5; i++ {
+        fmt.Println(scanner.Text())
+    }
+
+    if err := scanner.Err(); err != nil {
+        panic(err)
+    }
+}
+```
+
+### HTTP Server 
+```go
+package main
+
+import (
+    "fmt"
+    "net/http"
+)
+
+func hello(w http.ResponseWriter, req *http.Request) {
+
+    fmt.Fprintf(w, "hello\n")
+}
+
+func headers(w http.ResponseWriter, req *http.Request) {
+
+    for name, headers := range req.Header {
+        for _, h := range headers {
+            fmt.Fprintf(w, "%v: %v\n", name, h)
+        }
+    }
+}
+
+func main() {
+
+    http.HandleFunc("/hello", hello)
+    http.HandleFunc("/headers", headers)
+
+    http.ListenAndServe(":8090", nil)
+}
+```
+
 ### Error Handling, Defer, Panic, Recover
 - Built-in `error type` in Go
 ```go
@@ -607,8 +790,47 @@ return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
 }
 ```
 - Deferred function calls: `defer`, a defer statement is often used with paired operations like open and close, connect and disconnect, or lock and unlock to ensure that resources are released in all cases, no matter how complex the control flow.
-- Panic is a built-in function that stops the ordinary flow of control and begins panicking. When the function F calls panic, execution of F stops, any deferred functions in F are executed normally, and then F returns to its caller.
-- Recover() is a built-in function in Go that is used to regain control of a panicking goroutine. When a panic() is called, the normal flow of the program is interrupted, and the deferred functions in the same goroutine are executed. You can use recover() within a deferred function to catch the panic value, handle the error, and prevent the program from crashing. Recover is only useful inside deferred functions. During normal execution, a call to recover will return nil and have no other effect. If the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
+- `Panic` is a built-in function that stops the ordinary flow of control and begins panicking. When the function F calls panic, execution of F stops, any deferred functions in F are executed normally, and then F returns to its caller.
+```go
+package main
+
+import "os"
+
+func main() {
+
+    panic("a problem")
+
+    _, err := os.Create("/tmp/file")
+    if err != nil {
+        panic(err)
+    }
+}
+```
+- `Recover()` is a built-in function in Go that is used to regain control of a panicking goroutine. When a panic() is called, the normal flow of the program is interrupted, and the deferred functions in the same goroutine are executed. You can use recover() within a deferred function to catch the panic value, handle the error, and prevent the program from crashing. Recover is only useful inside deferred functions. During normal execution, a call to recover will return nil and have no other effect. If the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
+```go
+package main
+
+import "fmt"
+
+func mayPanic() {
+    panic("a problem")
+}
+
+func main() {
+// recover must be called within a deferred function. When the enclosing function panics, the defer will activate and a recover call within it will catch the panic
+    defer func() {
+        if r := recover(); r != nil {
+// The return value of recover is the error raised in the call to panic
+            fmt.Println("Recovered. Error:\n", r)
+        }
+    }()
+
+    mayPanic()
+
+    fmt.Println("After mayPanic()")
+    // This code will not run, because mayPanic panics. The execution of main stops at the point of the panic and resumes in the deferred closure.
+}
+```
 - [Defer, Panic and Recover](https://go.dev/blog/defer-panic-and-recover)
 
 ### Functions
@@ -917,6 +1139,24 @@ func main() {
     fmt.Println(msg)
 }
 ```
+```go
+// Buffered channels: Buffered channels accept a limited number of values without
+// a corresponding receiver for those values
+package main
+
+import "fmt"
+
+func main() {
+
+    messages := make(chan string, 2)
+
+    messages <- "buffered"
+    messages <- "channel"
+
+    fmt.Println(<-messages)
+    fmt.Println(<-messages)
+}
+```
 
 ### Select
 - The `select` statement lets a goroutine wait on multiple communication operations
@@ -952,10 +1192,40 @@ func main() {
     }
 }
 ```
+```go
+// Closing a channel and printing a channel values over Range
+package main
+
+import "fmt"
+
+func main() {
+    queue := make(chan string, 2)
+    queue <- "one"
+    queue <- "two"
+    close(queue)
+
+    for elem := range queue {
+        fmt.Println(elem)
+    }
+}
+```
+
+### API Clients(REST), Heimdall, GRequests
+- [REST API Introduction](https://www.geeksforgeeks.org/rest-api-introduction/)
+- REST API gives some information from a web service. All communication done via REST API uses only HTTP request. 
+- HTTP Request/Response(HTML,XML,Image,JSON)
+- HTTP Methods: `POST`, `GET`, `PUT`, `PATCH`, and `DELETE`; these correspond to create, read, update, and delete (or CRUD) operations respectively
+- [Heimdall](https://github.com/gojek/heimdall)
+- [Grequests](https://github.com/levigross/grequests)
+
+### Context
+
+### Mutex 
+- [Golang Mutex](https://www.sohamkamani.com/golang/mutex/)
 
 ### Buffer
 - The `buffer` belongs to the byte package of the Go language, and we can use these package to manipulate the byte of the string
-- [Golang-Biffer](https://www.educba.com/golang-buffer/)
+- [Golang-Buffer](https://www.educba.com/golang-buffer/)
 - [Bytes Buffer package](https://pkg.go.dev/bytes@go1.21.5)
 
 ### Working with JSON
@@ -969,3 +1239,4 @@ func main() {
 ### GORM 
 - The GORM is fantastic ORM library for Golang, aims to be developer friendly. It is an ORM library for dealing with relational databases. 
 - [GORM Website](https://gorm.io/docs/index.html), [GORM Package](https://pkg.go.dev/gorm.io/gorm)
+
