@@ -766,6 +766,13 @@ func main() {
 }
 ```
 
+### Context
+- [Understanding Contexts in GO](https://www.youtube.com/watch?v=h2RdcrMLQAo) 
+- [The Contexts Package](https://www.youtube.com/watch?v=LSzR0VEraWw)
+- [How To Use Contexts in Go](https://www.digitalocean.com/community/tutorials/how-to-use-contexts-in-go)
+- [Contexts Package](https://www.digitalocean.com/community/tutorials/how-to-use-contexts-in-go)
+- [Contexts Package](https://pkg.go.dev/context)
+
 ### Error Handling, Defer, Panic, Recover
 - Built-in `error type` in Go
 ```go
@@ -1218,8 +1225,6 @@ func main() {
 - [Heimdall](https://github.com/gojek/heimdall)
 - [Grequests](https://github.com/levigross/grequests)
 
-### Context
-
 ### Mutex 
 - [Golang Mutex](https://www.sohamkamani.com/golang/mutex/)
 
@@ -1239,4 +1244,3 @@ func main() {
 ### GORM 
 - The GORM is fantastic ORM library for Golang, aims to be developer friendly. It is an ORM library for dealing with relational databases. 
 - [GORM Website](https://gorm.io/docs/index.html), [GORM Package](https://pkg.go.dev/gorm.io/gorm)
-
