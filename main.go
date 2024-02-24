@@ -27,14 +27,15 @@ import (
 // localhost:4000/course/2  DELETE: delete a course
 
 type Course struct {
-	CourseId string		`json:"courseid"`
-	CourseName string 	`json:"coursename"`
-	CoursePrice int 	`json:"price"`
-	Author *Author		`json:"author"`
+	CourseId    string  `json:"courseid"`
+	CourseName  string  `json:"coursename"`
+	CoursePrice int     `json:"price"`
+	Author      *Author `json:"author"`
 }
+
 type Author struct {
-	Fullname string		`json:"fullname"`
-	Website string		`json:"website"`
+	Fullname string `json:"fullname"`
+	Website  string `json:"website"`
 }
 
 // fake DB
@@ -44,6 +45,7 @@ func (c *Course) IsEmpty() bool {
 	// return c.CourseId == "" && c.CourseName == ""
 	return c.CourseName == ""
 }
+
 // serve home route
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("<h1>Welcome to writing an API</h1>"))
@@ -55,11 +57,12 @@ func getAllCourses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(courses)
 }
+
 // serve API json response for one course based on request id
 func getOneCourse(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Get one course")
 	w.Header().Set("Content-Type", "application/json")
-	
+
 	// grab id from request
 	params := mux.Vars(r)
 
@@ -73,6 +76,7 @@ func getOneCourse(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("No course found with given id")
 	return
 }
+
 // Add a course controller
 func CreateOneCourse(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Create one course")
@@ -99,6 +103,7 @@ func CreateOneCourse(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(newCourse)
 	return
 }
+
 // Update a course controller
 func UpdateOneCourse(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Update one course")
@@ -108,7 +113,7 @@ func UpdateOneCourse(w http.ResponseWriter, r *http.Request) {
 	// loop, id, remove, add with my ID
 	for index, course := range courses {
 		if course.CourseId == params["id"] {
-			courses = append(courses[:index], courses[:index+1]... )
+			courses = append(courses[:index], courses[index+1:]...)
 			var updatedCourse Course
 			_ = json.NewDecoder(r.Body).Decode(&updatedCourse)
 			updatedCourse.CourseId = params["id"]
@@ -120,8 +125,9 @@ func UpdateOneCourse(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("No course is found with the given id")
 	return
 }
+
 // Delete a course controller
-func deleteOneCourse(w http.ResponseWriter, r *http.Request) {
+func DeleteOneCourse(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Delete one course")
 	w.Header().Set("Content-Type", "application/json")
 	// grab id from request
@@ -129,7 +135,7 @@ func deleteOneCourse(w http.ResponseWriter, r *http.Request) {
 	//loop, id, remove (index, index+1)
 	for index, course := range courses {
 		if course.CourseId == params["id"] {
-			courses = append(courses[:index], courses[:index+1]... )
+			courses = append(courses[:index], courses[index+1:]...)
 			break
 		}
 	}
@@ -142,14 +148,14 @@ func main() {
 	r := mux.NewRouter()
 
 	courses = append(courses, Course{CourseId: "2", CourseName: "ReactJS", CoursePrice: 299, Author: &Author{Fullname: "Tomiwa Aribisala", Website: "go.dev"}})
-	
+
 	// routing
 	r.HandleFunc("/", serveHome).Methods("GET")
 	r.HandleFunc("/courses", getAllCourses).Methods("GET")
 	r.HandleFunc("/course/{id}", getOneCourse).Methods("GET")
 	r.HandleFunc("/course", CreateOneCourse).Methods("POST")
 	r.HandleFunc("/course/{id}", UpdateOneCourse).Methods("PUT")
-	r.HandleFunc("/course/{id}", deleteOneCourse).Methods("DELETE")
+	r.HandleFunc("/course/{id}", DeleteOneCourse).Methods("DELETE")
 
 	// listen to a port
 	log.Fatal(http.ListenAndServe(":4000", r))
@@ -189,7 +195,6 @@ func main() {
 		fmt.Printf("The value of languages is %v\n", value)
 	}
 
-
 	content := "I am writing this text into a file"
 	file, err := os.Create("./log.txt")
 	if err != nil {
@@ -200,9 +205,16 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("length is:", length)
-	readfile("./log.txt")
 	defer file.Close()
+	readfile("./log.txt")
 
+	func readfile(filename string) {
+	databyte, err := os.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Text data inside the file is:", string(databyte))
+}
 
 	const url = "https://lco.dev"
 	response, err := http.Get(url)
@@ -291,10 +303,10 @@ func main() {
 
 	// Consuming(unmarshalling) JSON data in golang
 	jsonWebData := []byte(`
-	{
-		"Coursename": "devops bootcamp",
-		"Price": 390,
-		"Tags": ["docker","golang"]
+		{
+			"Coursename": "devops bootcamp",
+			"Price": 390,
+			"Tags": ["docker","golang"]
 		}
 	`)
 	var lcoCourse course
