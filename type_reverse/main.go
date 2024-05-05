@@ -12,7 +12,6 @@ func main() {
 		fmt.Println("Welcome to the type reverse game!")
 		randomWord := wordGenerator.GetWord(5)
 		result := reverse.String(randomWord)
-		fmt.Println(result)
 
 		var input string
 		fmt.Printf("Type the reverse of %s:", randomWord)
