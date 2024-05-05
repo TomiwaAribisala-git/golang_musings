@@ -1217,6 +1217,11 @@ func main() {
 }
 ```
 
+### WaitGroups
+### Mutex 
+- [Golang Mutex](https://www.sohamkamani.com/golang/mutex/)
+### Race Condition
+
 ### API Clients(REST), Heimdall, GRequests
 - [REST API Introduction](https://www.geeksforgeeks.org/rest-api-introduction/)
 - REST API gives some information from a web service. All communication done via REST API uses only HTTP request. 
@@ -1224,9 +1229,6 @@ func main() {
 - HTTP Methods: `POST`, `GET`, `PUT`, `PATCH`, and `DELETE`; these correspond to create, read, update, and delete (or CRUD) operations respectively
 - [Heimdall](https://github.com/gojek/heimdall)
 - [Grequests](https://github.com/levigross/grequests)
-
-### Mutex 
-- [Golang Mutex](https://www.sohamkamani.com/golang/mutex/)
 
 ### Buffer
 - The `buffer` belongs to the byte package of the Go language, and we can use these package to manipulate the byte of the string

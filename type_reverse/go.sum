@@ -1,0 +1,4 @@
+github.com/zhexuany/wordGenerator v0.0.0-20161102120352-1f13e790d534 h1:Sg5L9VJM3elnf6JuaHMR9+ii0orQfxdnWFL/NutbAjs=
+github.com/zhexuany/wordGenerator v0.0.0-20161102120352-1f13e790d534/go.mod h1:oplLsl5isjq5d/8EaGgzN5Exkisk6Jr5qu2QbvRLtLM=
+golang.org/x/example/hello v0.0.0-20240205180059-32022caedd6a h1:lnHwduM5X5Fb0YnIPyjyGzRY88cc0Fo6xTgaWDX2c7Q=
+golang.org/x/example/hello v0.0.0-20240205180059-32022caedd6a/go.mod h1:UhUKOXx5fMcLZxwL20DUrWWBBoRYG9Jvc8FiwZhRHCI=
