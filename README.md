@@ -158,6 +158,9 @@ func TestIntMinBasic(t *testing.T) {
 }
 ```
 ```sh
+go test
+```
+```sh
 go test -v
 ```
 - [Table Driven Tests wit Golang](https://quii.gitbook.io/learn-go-with-tests/)
@@ -221,8 +224,8 @@ func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
 * / % << >> & &^
 + - | ^
 == != < <= > >= +=
-&&
-||
+&& // and
+|| // or
 ```
 - Types
 - Integers: `int`, `unit`
@@ -239,7 +242,7 @@ func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
 ```go
 f, err := os.Open(name)
 if err != nil {
-return err
+    return err
 }
 f.Close()
 ```
@@ -332,7 +335,7 @@ fmt.Scan(&lastName)
 bookings[0] = firstName + " " + lastName
 fmt.Println("Welcome", firstName, lastName)
 ```
-- Slices: an abstraction of an array, more flexible and powerful--variable-length or get a sub-array of its own, slices have a size like an array, but can be resized when needed. 
+- Slices: an abstraction of an array, more flexible and powerful; variable-length or get a sub-array of its own, slices have a size like an array, but can be resized when needed. 
 ```go
 a := []int{}
 printSlice(a)
@@ -358,7 +361,7 @@ slice_name := make([]type, length, capacity)
 - Capcacity of a Slice
 
 ### Maps
-- Maps maps unique keys to values, you can retrieve the value later by using its key
+- Maps map unique keys to values, you can retrieve the value later by using its key
 - All keys and values have the same data type, map supports only one data type at once
 ```go
 map[K]V
@@ -568,7 +571,7 @@ if !condition || !condition {
 - An example using `switch statement`, given a user selects a specific city, a certain code is executed for that city.
 ```go
 switch city {
-   case "New York":
+    case "New York":
     // execute code for New York
     case "Singapore":
     // execute code for Singapore
@@ -593,7 +596,6 @@ import (
 )
 
 func main() {
-
     argsWithProg := os.Args
     argsWithoutProg := os.Args[1:]
 
@@ -776,11 +778,11 @@ func main() {
 ### Error Handling, Defer, Panic, Recover
 - Built-in `error type` in Go
 ```go
-f, err := os.Open("filename.ext")
+f, err := os.Open("filename.txt")
 if err != nil {
     log.Fatal(err)
 }
-f.Close()
+defer f.Close()
 ```
 - Error handling is important is golang as sometimes code success is not assured, which depends on factors beyond the programmer control. For example, any function that does I/O must confront the possibility of an error
 - An `error` may be `nil` or `non-nil`, `nil` implies success and `non-nil` implies failure, a `non-nil` error has an error message string which we can obtain by calling its Error method or print by calling `fmt.Println(err)` or `fmt.Printf("%v", err)`.
@@ -788,12 +790,12 @@ f.Close()
 - [Error Handling in Go](https://earthly.dev/blog/golang-errors/)
 - [Go Error Package](https://pkg.go.dev/errors@go1.17.5)
 - When designing error messages, be deliberate, so that each one is a meaningful description of the problem with sufficient and relevant detail, and be consistent, so that errors returned by the same function or by a group of functions in the same package are similar in form and can be dealt with in the same way.
-- For example, the os package guarantees that every error returned by a file operation, such as os.Open or the Read, Write, or Close methods of an open file, describes not just the nature of the failure (permission denied, no such directory, and so on) but also the name of the file, so the caller needn’t include this information in the error message it constructs.
+- For example, the `os` package guarantees that every error returned by a file operation, such as `os.Open` or the `Read`, `Write`, or `Close` methods of an open file, describes not just the nature of the failure (permission denied, no such directory, and so on) but also the name of the file, so the caller needn’t include this information in the error message it constructs.
 ```go
 doc, err := html.Parse(resp.Body)
-resp.Body.Close()
+defer resp.Body.Close()
 if err != nil {
-return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
+    return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
 }
 ```
 - Deferred function calls: `defer`, a defer statement is often used with paired operations like open and close, connect and disconnect, or lock and unlock to ensure that resources are released in all cases, no matter how complex the control flow.
@@ -813,7 +815,7 @@ func main() {
     }
 }
 ```
-- `Recover()` is a built-in function in Go that is used to regain control of a panicking goroutine. When a panic() is called, the normal flow of the program is interrupted, and the deferred functions in the same goroutine are executed. You can use recover() within a deferred function to catch the panic value, handle the error, and prevent the program from crashing. Recover is only useful inside deferred functions. During normal execution, a call to recover will return nil and have no other effect. If the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
+- `Recover()` is a built-in function in Go that is used to regain control of a panicking goroutine. When a `panic()` is called, the normal flow of the program is interrupted, and the deferred functions in the same goroutine are executed. You can use `recover()` within a deferred function to catch the panic value, handle the error, and prevent the program from crashing. Recover is only useful inside deferred functions. During normal execution, a call to recover will return nil and have no other effect. If the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
 ```go
 package main
 
@@ -855,7 +857,7 @@ func main() {
 - A function with parameters
 ```go
 func greetUsers(confName string) {
-    fmt.Println("Welcome everybody to the", confName, "conference")
+    fmt.Printf("Welcome everybody to the %s conference", confName)
 }
 ```
 - A function with return value
@@ -882,10 +884,10 @@ greetUsers(confName)
 - Variadic functions: A variadic function is one that has a varying number of parameters which is written as `func sum(vals ...int) int` and can be called with a varying number of arguments
 ```go
 func sum(vals ...int) int {
-total := 0
-for _, val := range vals {
-total += val
-}
+    total := 0
+    for _, val := range vals {
+        total += val
+    }
 return total
 }
 
@@ -933,11 +935,6 @@ type T struct {
 // but we don't need to explicitly declare that it does so.
 func (t T) M() {
 	fmt.Println(t.S)
-}
-
-func main() {
-	var i I = T{"hello"}
-	i.M()
 }
 ```
 ```go
@@ -1015,7 +1012,8 @@ type geometry interface {
 }
 
 type rect struct {
-    width, height float64
+    width float64
+    height float64
 }
 type circle struct {
     radius float64
@@ -1221,14 +1219,6 @@ func main() {
 ### Mutex 
 - [Golang Mutex](https://www.sohamkamani.com/golang/mutex/)
 ### Race Condition
-
-### API Clients(REST), Heimdall, GRequests
-- [REST API Introduction](https://www.geeksforgeeks.org/rest-api-introduction/)
-- REST API gives some information from a web service. All communication done via REST API uses only HTTP request. 
-- HTTP Request/Response(HTML,XML,Image,JSON)
-- HTTP Methods: `POST`, `GET`, `PUT`, `PATCH`, and `DELETE`; these correspond to create, read, update, and delete (or CRUD) operations respectively
-- [Heimdall](https://github.com/gojek/heimdall)
-- [Grequests](https://github.com/levigross/grequests)
 
 ### Buffer
 - The `buffer` belongs to the byte package of the Go language, and we can use these package to manipulate the byte of the string
